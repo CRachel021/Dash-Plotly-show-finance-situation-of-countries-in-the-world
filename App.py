@@ -3,7 +3,7 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from map import world_map, debt_rank, top_10, finance
+from map import debt_rank, top_10, finance
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -13,17 +13,17 @@ all_countries = finance['CountryName'].unique()
 all_indicator = finance['IndicatorName'].unique()
 
 app.layout = html.Div([
-    html.H1('Total external debt stocks in global countries', style={'textAlign':'center','font-size': '35px','color':'#343434'}),
+    html.H1('Financial situation in global countries', style={'textAlign':'center','font-size': '35px','color':'#343434'}),
     html.Div([
         dcc.Graph(id='world_map',
                   figure = px.choropleth(debt_rank,locations='CountryCode',color='Value',projection='natural earth',
                                          title='Overall external debt stocks in countries',hover_name=debt_rank['CountryName'],
-                                         color_continuous_scale=px.colors.sequential.Blues,range_color=(1,190)
+                                         color_continuous_scale=px.colors.sequential.Plasma
                                                 )
                          )
               ], className = 'twelve columns'),
     html.Div([
-        html.Div('Compare any two countries in terms of finance situation',
+        html.Div('Compare any two countries in terms of other financial indicators',
                  style={'color':'#343434','margin-bottom':'10px','font-weight':'bold','font-size':'18px'}),
         dcc.Dropdown(id='country1', options=[{'label':i, 'value':i} for i in all_countries],
                      value='Brazil',style={'width': '50%','margin-bottom': '10px'}),
@@ -38,18 +38,18 @@ app.layout = html.Div([
 
     ),
     html.Div([
-        html.Div([dcc.Graph('one_grap')],className = 'six columns'),
+        html.Div([dcc.Graph('one_grap')],className = 'five columns'),
         html.Div([dcc.Graph(
             id='top_debt',
             figure={
                 'data':[{'x':top_10['CountryName'],'y':top_10['Value'],'type':'bar'}],
                 'layout':
-                dict(title=('Top 10 countries in terms of total external debt stocks'),
+                dict(title=('Top 10 countries measured by Net official development assistance received (current US$)'),
                      xaxis={'title':'Countries'},
                      yaxis={'title':'Ratings'}
                      )
             }
-        )],className='six columns'),
+        )],className='seven columns'),
         ],className='row')
     ])
 
